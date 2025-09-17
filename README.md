@@ -375,6 +375,7 @@ This repository contains a set of files that automate our development lifecycle.
 ---
 
 ### Scripts & Configuration
+* **``** : hello
 
 * **`scripts/smoke-tests.sh`**: A simple post-deployment script to check if the application is running and healthy.
 * **`.golangci.yml`**: The configuration file for our linter, `golangci-lint`. It defines the rules for keeping our Go code consistent and clean.
