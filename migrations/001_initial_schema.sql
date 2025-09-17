@@ -1,0 +1,11 @@
+-- TODO - Luiz
+-- 1. Create users table with all required fields
+-- 2. Create posts table with user foreign key
+-- 3. Create follows table for social relationships
+-- 4. Create likes table for post interactions
+-- 5. Create comments table for post discussions
+-- 6. Create events table for social events
+-- 7. Create event_rsvps table for event participation
+-- 8. Create conversations and messages tables for DMs
+-- 9. Add all necessary indexes for performance
+-- 10. Set up foreign key constraints
