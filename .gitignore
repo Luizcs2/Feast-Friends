@@ -1,0 +1,36 @@
+cat > .gitignore << 'EOL'
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace
+go.work
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build
+dist/
+build/
+bin/
+
+# Logs
+*.log
+logs/
+
+# Temp
+tmp/
+EOL
