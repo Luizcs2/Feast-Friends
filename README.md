@@ -346,6 +346,51 @@ git pull          # Get latest code
 git push          # Upload your changes
 ```
 
+[![CI/CD Pipeline Status](https://github.com/Luizcs2/Feast-Friends/actions/workflows/ci.yml/badge.svg)](https://github.com/Luizcs2/Feast-Friends/actions)
+
+This project is configured with a complete CI/CD pipeline using GitHub Actions to automate testing, security scanning, and deployment.
+
+---
+
+## 🤖 CI/CD and Automation Overview
+
+This repository contains a set of files that automate our development lifecycle. Here’s a quick guide to what each file does:
+
+### Workflows (`.github/workflows/`)
+
+* **`pr-check.yml`**: Runs automatically on every **pull request**. It lints the code and runs all unit tests to ensure code quality before merging.
+* **`ci.yml`**: Runs automatically when code is **pushed to the `main` branch**. It serves as a final check to ensure the main branch is always stable.
+* **`security.yml`**: Runs on pull requests and pushes to `main`. It uses GitHub CodeQL to scan the code for common security vulnerabilities.
+* **`cd.yml`**: The Continuous Deployment workflow. It triggers automatically when a new **version tag** (e.g., `v1.0.0`) is pushed. It builds a production-ready Docker image and pushes it to a container registry.
+
+---
+
+### Dockerization (`/docker/`)
+
+
+* **`Dockerfile.dev`**: The blueprint for building the Go application. It uses a multi-stage build to create a small, efficient, and secure production image.
+* **`docker-compose.prod.yml`**: A file to easily run the entire application stack (the API and a PostgreSQL database) in a production-like environment.
+* **`.dockerignore`**: Lists files and folders that should be ignored by Docker during the build process to keep the image clean and small.
+
+---
+
+### Scripts & Configuration
+
+* **`scripts/smoke-tests.sh`**: A simple post-deployment script to check if the application is running and healthy.
+* **`.golangci.yml`**: The configuration file for our linter, `golangci-lint`. It defines the rules for keeping our Go code consistent and clean.
+* **`.github/` templates**: The markdown files in `ISSUE_TEMPLATE`, along with `PULL_REQUEST_TEMPLATE.md`, provide a consistent structure for creating issues and pull requests.
+
+---
+
+## 🚀 How the Workflow Works
+
+1.  **Development**: A developer creates a pull request.
+2.  **Code Review**: The `pr-check.yml` and `security.yml` workflows automatically run tests and security scans. GitHub requires these to pass before merging.
+3.  **Merge**: Once approved, the code is merged into the `main` branch, triggering the `ci.yml` workflow.
+4.  **Release**: To deploy a new version, a maintainer pushes a new tag (e.g., `git tag v1.0.1` && `git push origin v1.0.1`).
+5.  **Deployment**: Pushing the tag triggers the `cd.yml` workflow, which builds the final Docker image and pushes it to the container registry, ready for deployment.
+
+
 **Happy coding! 🚀**
 
 ---

@@ -1,0 +1,53 @@
+# A descriptive name for the workflow.
+name: Security Scan
+
+# Defines the events that trigger this workflow.
+on:
+  # Run on pushes to the main branch (e.g., after a PR is merged).
+  push:
+    branches: [ "main", "master" ]
+  # Run on every pull request targeting the main branch to catch issues before merging.
+  pull_request:
+    branches: [ "main", "master" ]
+  # Run on a schedule to find any newly discovered vulnerabilities in existing code.
+  schedule:
+    # This is a CRON expression that means 'run at 5:30 AM UTC every Monday'.
+    - cron: '30 5 * * 1'
+
+# Defines the jobs to be executed.
+jobs:
+  # A single job named 'codeql-analysis'.
+  codeql-analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    # Specifies the permissions the job needs.
+    permissions:
+      # Required to allow the action to upload the results to GitHub's Security tab.
+      security-events: write
+      # Required for the checkout action to read the repository contents.
+      actions: read
+      contents: read
+
+    steps:
+      # Step 1: Check out the repository code so the workflow can access it.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Initialize the CodeQL analysis tool.
+      # This step prepares the environment and detects the language to be analyzed.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          # We explicitly tell it our language is Go.
+          languages: go
+
+      # Step 3: Build the code.
+      # CodeQL observes the build process to create a detailed database of the code.
+      # The 'autobuild' action automatically detects and runs the standard Go build command.
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      # Step 4: Perform the actual CodeQL analysis.
+      # This step runs queries against the database created during the build to find vulnerabilities.
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

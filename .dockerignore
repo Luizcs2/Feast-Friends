@@ -1,0 +1,25 @@
+# Ignore version control files and directories.
+.git
+.gitignore
+
+# Ignore Docker-related files to prevent them from being included inside the image itself.
+Dockerfile
+docker-compose.*.yml
+
+# Ignore IDE, editor, and environment-specific configuration.
+.vscode/
+.idea/
+
+# Ignore all environment variable files EXCEPT the example file.
+# This is critical for security! Never commit secrets.
+.env*
+*.env
+!.env.example
+
+# Ignore documentation and local-only files.
+*.md
+*.local
+
+# Ignore common OS-generated files.
+.DS_Store
+Thumbs.db

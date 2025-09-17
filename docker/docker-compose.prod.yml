@@ -1,0 +1,56 @@
+# Specifies the Docker Compose file format version. Version '3.8' is a stable, modern choice.
+version: '3.8'
+
+# The 'services' block is where you define the containers that make up your application.
+services:
+  # This is the service for your main Go application.
+  api:
+    # 🚨 IMPORTANT: This tells Docker to pull the image you built and pushed with your CD pipeline.
+    # Make sure this matches the image name from your 'cd.yml' workflow.
+    image: luizcs2/feast-friends-api:latest
+    # A friendly name for the running container.
+    container_name: feast_friends_api_prod
+    # This policy ensures the container restarts automatically if it crashes or the server reboots.
+    restart: unless-stopped
+    # Maps port 8080 on the host machine to port 8080 in the container.
+    # This is how you access your API from outside the container.
+    ports:
+      - "8080:8080"
+    # This section is for passing environment variables to your application.
+    environment:
+      - GIN_MODE=release
+      # Your app will connect to the database using the hostname 'db', which is the name of the database service below.
+      - DB_HOST=db
+      # It's best practice to load secrets from a .env file rather than hardcoding them here.
+      # Docker Compose will automatically look for a .env file in the same directory.
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    # This makes sure the 'db' service starts before the 'api' service.
+    depends_on:
+      - db
+
+  # This is the service for your PostgreSQL database.
+  db:
+    # Use the official PostgreSQL 15 image from Docker Hub, based on Alpine Linux for a smaller size.
+    image: postgres:15-alpine
+    container_name: feast_friends_db_prod
+    restart: unless-stopped
+    # 'volumes' are used to persist data. This line ensures that your database data
+    # is saved on the host machine even if the 'db' container is removed or recreated.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # Environment variables to configure the PostgreSQL container on its first run.
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    # (Optional) You can expose the database port to the host machine for direct access with a DB tool.
+    # Be careful with this in a real production environment.
+    ports:
+      - "5432:5432"
+
+# This top-level 'volumes' block defines the named volume used by the 'db' service.
+# Docker manages this volume for you.
+volumes:
+  postgres_data:

@@ -1,0 +1,34 @@
+# Global configuration for the runner.
+run:
+  # Set a timeout for the entire analysis to prevent it from running forever.
+  deadline: 5m
+
+# Settings specific to certain linters.
+linters-settings:
+  govet:
+    # Enable checking for shadowed variables, a common source of bugs.
+    check-shadowing: true
+  gofmt:
+    # Enforce code simplification rules.
+    simplify: true
+  goimports:
+    # Specify your project's module path so `goimports` can correctly group your local packages.
+    # 🚨 IMPORTANT: Change this to your project's module path from your go.mod file.
+    local-prefixes: github.com/Luizcs2/Feast-Friends
+
+# Linters configuration.
+linters:
+  # It's best practice to disable all linters first...
+  disable-all: true
+  # ...and then explicitly enable only the ones you want. This provides stability.
+  enable:
+    - errcheck      # Checks for unchecked errors.
+    - gosimple      # Finds code that can be simplified.
+    - govet         # Reports suspicious constructs.
+    - ineffassign   # Detects ineffectual assignments.
+    - staticcheck   # A suite of powerful static analysis checks.
+    - typecheck     # A wrapper around `go build` to find compile errors.
+    - unused        # Finds unused code.
+    - gofmt         # Checks if code is formatted with gofmt.
+    - goimports     # Like gofmt, but also manages imports.
+    - revive        # A fast and configurable linter.

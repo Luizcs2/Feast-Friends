@@ -1,0 +1,45 @@
+# A descriptive name for the workflow, which will be displayed on GitHub.
+name: PR Check
+
+# 'on' defines the events that trigger this workflow.
+on:
+  # This workflow runs whenever a pull request is opened, synchronized, or reopened.
+  pull_request:
+    # It only runs for pull requests targeting these specific branches.
+    branches:
+      - main
+      - master
+
+# 'jobs' defines a sequence of tasks to be executed.
+jobs:
+  # We define a single job named 'lint-and-test'.
+  lint-and-test:
+    # A descriptive name for the job.
+    name: Lint & Test
+    # Specifies the type of virtual machine to run the job on. 'ubuntu-latest' is common and cost-effective.
+    runs-on: ubuntu-latest
+    # 'steps' are the individual commands or actions that make up the job.
+    steps:
+      # Step 1: Check out the repository code.
+      # This action checks out your repository onto the runner, allowing the workflow to access it.
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the Go programming language environment.
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          # Specify the version of Go to use.
+          go-version: '1.22'
+
+      # Step 3: Run the linter to check for code style and potential errors.
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v5
+        with:
+          # Specify the version of the linter for consistent results.
+          version: v1.57.2
+
+      # Step 4: Run the unit tests for your application.
+      # 'go test -v ./...' runs all tests in the current directory and all subdirectories verbosely.
+      - name: Run tests
+        run: go test -v ./...

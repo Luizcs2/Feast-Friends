@@ -1,0 +1,38 @@
+# A descriptive name for the workflow.
+name: CI for Main Branch
+
+# This workflow is triggered on a 'push' event.
+on:
+  push:
+    # It only runs for push events to these specific branches.
+    # This is the key difference from the 'pr-check.yml' workflow.
+    branches:
+      - main
+      - master
+
+# Define the jobs for this workflow.
+jobs:
+  # A single job to build, lint, and test the code.
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository code.
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the Go programming language environment.
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      # Step 3: Run the linter to check for code style and potential errors.
+      - name: Run linter
+        uses: golangci/golangci-lint-action@v5
+        with:
+          version: v1.57.2
+
+      # Step 4: Run the unit tests for your application.
+      - name: Run tests
+        run: go test -v ./...
