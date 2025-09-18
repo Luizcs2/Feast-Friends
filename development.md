@@ -6,3 +6,5 @@
 # How to Use the Logger
 - First, import the package: import "your_module_name/internal/logger"
 - Then, call the desired function: logger.Info("Server has started") or logger.Errorf("Failed to process request %s: %v", requestID, err)
+
+# do not delete git.keep (saves empty folders)
