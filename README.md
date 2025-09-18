@@ -1,5 +1,6 @@
 cat > README.md << 'EOL'
-# Feast Friends API
+# Feast Friends APP
+# An app where you can share what you make socail events tailored to foodies and follow and like others along with ai features that calculate calories on what you cook based on the ingerdients you add into recipe
 
 A Go backend API for a social food sharing application.
 
@@ -7,7 +8,7 @@ A Go backend API for a social food sharing application.
 
 # 🍽️ Feast Friends API - Partner Onboarding Guide
 
-Welcome to the Feast Friends API development team! This guide will get you up and running quickly.
+Welcome to the Feast Friends APP development team! This guide will get you up and running quickly.
 
 ## 👥 Team & Roles
 
@@ -70,14 +71,7 @@ Download [VS Code](https://code.visualstudio.com/) and install these extensions:
 - **REST Client** - Test APIs directly in VS Code
 - **GitLens** - Enhanced Git features
 
-### 5. Test Your Setup
-```bash
-# Run the application
-make run
 
-# Should see: "Starting server on port: 8080"
-# Visit: http://localhost:8080/health
-```
 
 ---
 
@@ -102,54 +96,6 @@ feast-friends-api/
 │   └── utils/                   # 🔧 Helper functions (Luiz)
 └── ...
 ```
-
----
-
-## 🔄 Daily Workflow
-
-### Starting Your Work Day
-```bash
-# 1. Switch to develop branch and get latest code
-git checkout develop
-git pull origin develop
-
-# 2. Create your feature branch
-git checkout -b feature/[your-name]-[description]
-# Examples:
-git checkout -b feature/luiz-jwt-middleware
-git checkout -b feature/gus-post-models
-
-# 3. Start coding!
-```
-
-### During Development
-```bash
-# Check what you've changed
-git status
-
-# Add your changes
-git add .
-
-# Commit with descriptive message
-git commit -m "feat: implement user authentication middleware"
-git commit -m "fix: resolve post creation validation bug"
-git commit -m "docs: update API endpoint documentation"
-
-# Push to your branch
-git push
-```
-
-### When Feature is Complete
-1. **Push final changes**: `git push`
-2. **Create Pull Request** on GitHub:
-   - Go to repository → "New Pull Request"
-   - Base: `develop` ← Compare: `feature/your-branch`
-   - Fill in the PR template
-   - Request review from your partner
-3. **Address feedback** if needed
-4. **Merge** after approval
-
----
 
 ## 🧪 Testing Your Code
 
@@ -190,61 +136,6 @@ make test-coverage
 
 # Check code formatting
 make fmt
-```
-
----
-
-## 📋 Your TODO Lists
-
-### Luiz's Initial Tasks (Foundation)
-- [ ] **Week 1**: Complete `cmd/server/main.go` - app startup and routing
-- [ ] **Week 1**: Implement `internal/config/config.go` - environment configuration
-- [ ] **Week 1**: Build `internal/middleware/auth.go` - JWT validation
-- [ ] **Week 1**: Create `internal/utils/jwt.go` - token generation/validation
-- [ ] **Week 2**: Finish authentication handlers in `internal/handlers/auth.go`
-- [ ] **Week 2**: Add CORS and logging middleware
-- [ ] **Week 3**: Docker setup and deployment preparation
-- [ ] **Week 4**: Performance optimization and production readiness
-
-### Gus's Initial Tasks (Core Features)
-- [ ] **Week 1**: Define all data models in `internal/models/` 
-- [ ] **Week 1**: Create database schema in `migrations/`
-- [ ] **Week 2**: Implement post handlers in `internal/handlers/posts.go`
-- [ ] **Week 2**: Build social features in `internal/handlers/social.go`
-- [ ] **Week 3**: Add events system in `internal/handlers/events.go`
-- [ ] **Week 3**: Create messaging system in `internal/handlers/messages.go`
-- [ ] **Week 4**: Image upload service and final integrations
-
----
-
-## 🆘 Getting Help
-
-### Common Issues & Solutions
-
-**"go: cannot find main module"**
-```bash
-# Make sure you're in the project root directory
-cd feast-friends-api
-go mod tidy
-```
-
-**"Supabase connection failed"**
-- Check your `.env` file has correct `SUPABASE_URL` and `SUPABASE_KEY`
-- Verify Supabase project is active
-
-**"Port 8080 already in use"**
-```bash
-# Kill process using port 8080
-sudo lsof -i :8080
-sudo kill -9 [PID]
-```
-
-**Git conflicts when pulling**
-```bash
-# Stash your changes, pull, then reapply
-git stash
-git pull origin develop
-git stash pop
 ```
 
 ### Communication Channels
