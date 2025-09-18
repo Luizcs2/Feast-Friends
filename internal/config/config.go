@@ -1,6 +1,6 @@
 //Loads all env vars from .env into config struct which rest of app can use 
 
-package configs
+package config
 
 import (
 	"log"
