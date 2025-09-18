@@ -34,3 +34,6 @@ logs/
 # Temp
 tmp/
 EOL
+
+# logs
+/logs

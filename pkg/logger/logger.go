@@ -1,17 +1,33 @@
 // TODO - Luiz
-// 4. File rotation for log files
-// 5. Export logger functions: Info, Error, Debug, Warn	
+// Export logger functions: Info, Error, Debug, Warn
 
 // Package logger provides a centralized logging setup for the Feast Friends API,
 // configuring log formatting and levels based on environment and application settings.
 package logger
 
 import (
-	"github.com/sirupsen/logrus"
 	"feast-friends-api/internal/config"
+	"io"
+	"os"
+	"github.com/sirupsen/logrus"
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 var Log = logrus.New()
+
+
+func Info(format string, args ...interface{}){
+	Log.Infof(format,args...)
+}
+func Error(format string ,args ...interface{}){
+	Log.Errorf(format,args...)
+}
+func Debug(format string , args ...interface{}){
+	Log.Debugf(format,args...)
+}
+func Warn(format string, args ... interface{}){
+	Log.Warnf(format,args...)
+}
 
 // init configures the global logger instance (Log) based on application configuration,
 // setting the log level and formatting according to the environment (development or production).
@@ -23,6 +39,14 @@ func init() {
 	levelString := cfg.Logging.Level
 	env := cfg.Environment
 
+	lumberjackLogger := &lumberjack.Logger{
+		Filename:  ".logs/app.log",
+		MaxSize:10, // megabytes
+		MaxBackups: 3,
+		MaxAge: 28, //days
+		Compress: true, // disabled by default
+	}
+
 	// here we set up formatting for dev or production based on environment string
 	if env == "development" {
 		Log.SetFormatter(&logrus.TextFormatter{
@@ -32,11 +56,15 @@ func init() {
 			TimestampFormat: "15:04:05",
 		})
 		Log.SetReportCaller(true)
+		multiWriter := io.MultiWriter(os.Stdout,lumberjackLogger)
+		Log.SetOutput(multiWriter)
+
 	} else {
 		Log.SetFormatter(&logrus.JSONFormatter{
 			PrettyPrint: false, 
 		})
 		Log.SetReportCaller(false)
+		Log.SetOutput(lumberjackLogger)
 
 	}
 
