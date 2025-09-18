@@ -1,11 +1,4 @@
-// TODO - Luiz
-// 1. Define Config struct with all environment variables:
-//    - DATABASE_URL, JWT_SECRET, SUPABASE_URL, SUPABASE_KEY
-//    - SERVER_PORT, ENVIRONMENT (dev/prod)
-// 2. Load config from .env file or environment
-// 3. Validate required configuration values
-// 4. Provide default values where appropriate
-// 5. Export global config instance
+//Loads all env vars from .env into config struct which rest of app can use 
 
 package configs
 
@@ -16,6 +9,7 @@ import (
 
 )
 
+//container which holds all configs app needs
 type Config struct {
 	Enviorment string `envconfig:"ENVIRONMENT" default:"dev"`
 	Server struct {
@@ -51,5 +45,14 @@ func Get() Config{
 
 //holds config
 func init(){
+	//loads the .env file if it exists 
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found (make sure its in the root)")
+	}
+
+	//populate cfg from env variables
+	if err := envconfig.Process("", &cfg); err != nil {
+		log.Printf("Failed to Load Config:%v", err)
+	}
 
 }
