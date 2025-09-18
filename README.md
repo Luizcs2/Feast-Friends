@@ -1,6 +1,7 @@
 cat > README.md << 'EOL'
 # Feast Friends APP
-# An app where you can share what you make socail events tailored to foodies and follow and like others along with ai features that calculate calories on what you cook based on the ingerdients you add into recipe
+
+An app for food lovers where you can share what you cook, host or join food-themed social events, and connect with other foodies by following and liking their posts. It also includes AI-powered features that calculate calories and nutrition based on the ingredients you add to your recipes.
 
 A Go backend API for a social food sharing application.
 
