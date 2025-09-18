@@ -1,6 +1,6 @@
 //Loads all env vars from .env into config struct which rest of app can use 
 
-package configs
+package config
 
 import (
 	"log"
@@ -11,7 +11,7 @@ import (
 
 //container which holds all configs app needs
 type Config struct {
-	Enviorment string `envconfig:"ENVIRONMENT" default:"dev"`
+	Environment string `envconfig:"ENVIORNMENT" default:"dev"`
 	Server struct {
 		Port string `envconfig:"SERVER_PORT" default:"8000"`
 		GinMode string `envconfig:"GIN_MODE" default:"debug"`
