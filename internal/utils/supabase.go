@@ -1,13 +1,3 @@
-// TODO - Luiz
-// 1. Initialize Supabase client with URL and service key
-// 2. Create database connection pool
-// 3. Implement helper functions:
-//    - ExecuteQuery(query, args) for SELECT statements
-//    - ExecuteNonQuery(query, args) for INSERT/UPDATE/DELETE
-// 4. Handle database connection errors
-// 5. Add connection health check function
-// 6. Configure connection timeouts and retries
-
 package utils
 
 //set importing necessary packages
@@ -15,6 +5,9 @@ import (
 	"context"
 	"feast-friends-api/internal/config"
 	"feast-friends-api/pkg/logger"
+	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
@@ -30,30 +23,58 @@ func Connection() error {
 	cfg := config.Get()
 	connStr := cfg.Supabase.URL
 	Key := cfg.Supabase.Skey
+	maxRetries := 3
+	retryDelay := 2 * time.Second
+	var lastErr []error
+	var check error
 
-	SupaClient, err := supabase.NewClient(connStr, Key, &supabase.ClientOptions{})
-	if err != nil {
-		logger.Log.Errorf("Failed to create supabase client: %v", err)
-		return err
+	for i := 0; i < maxRetries; i++ {
+
+		clientOptions := supabase.ClientOptions{}
+
+		//attemping to conenct to supabase client
+		SupaClient, err := supabase.NewClient(connStr, Key, &clientOptions)
+		if err != nil {
+			lastErr = append(lastErr, fmt.Errorf("failed to connect to supabase client: %v", err))
+			logger.Warn("Supabase client creation failed on attempt %d: %v", i+1, err)
+			time.Sleep(retryDelay)
+			continue //trying until max retries reached
+		}
+		SupabaseClient = SupaClient
+
+		//using health check to confirm connection is alive
+		if err := SupabaseCheck(); err != nil {
+			check = err
+			logger.Warn("Supabase health check failed: %v", check)
+			time.Sleep(retryDelay)
+			continue //trying until max retries reached
+		}
+
+		// asking for connection pool && return error if any
+
+		dbpool, err := pgxpool.Connect(context.Background(), fmt.Sprintf("%s?connect_timeout=10", connStr))
+		if err != nil {
+			lastErr = append(lastErr, fmt.Errorf("failed to connect to DB: %v", err))
+			logger.Warn("DB connection failed on attempt %d: %v", i+1, err)
+			time.Sleep(retryDelay)
+			continue
+		}
+		DB = dbpool
+
+		//using db health check to confirm connection is alive
+		if err := DBCheck(); err != nil {
+			check = err
+			logger.Warn("DB health check failed: %v", check)
+			time.Sleep(retryDelay)
+			continue //trying until max retries reached
+		}
+
+		// if we reach here both connections are successful
+		logger.Info("Supabase and DB connection successful")
+		return nil
 	}
-	SupabaseClient = SupaClient
-
-	// asking for connection pool && return error if any
-	dbpool, err := pgxpool.Connect(context.Background(), connStr)
-	if err != nil {
-		logger.Log.Errorf("Failed to connect to supabase: %v", err)
-		return err
-	}
-
-	//ping to confirm if dbpool connected successfully
-	if err = dbpool.Ping(context.Background()); err != nil {
-		logger.Log.Errorf("Failed to ping supabase: %v", err)
-		return err
-	}
-
-	DB = dbpool
-	logger.Log.Info("Connected to Supabase successfully")
-	return nil
+	// if we reach here all retries failed
+	return fmt.Errorf("failed to connect after %d attempts: %v", maxRetries, lastErr)
 
 }
 
@@ -61,7 +82,7 @@ func Connection() error {
 func ExecuteQuery(query string, args ...interface{}) (pgx.Rows, error) {
 	rows, err := DB.Query(context.Background(), query, args...)
 	if err != nil {
-		logger.Log.Errorf("query execution failed:%s : %v", query, err)
+		logger.Error("query execution failed:%s : %v", query, err)
 		return nil, err
 	}
 	return rows, nil
@@ -73,28 +94,28 @@ func ExecuteQuery(query string, args ...interface{}) (pgx.Rows, error) {
 func ExecuteNonQuery(query string, args ...interface{}) (pgconn.CommandTag, error) {
 	commandTag, err := DB.Exec(context.Background(), query, args...)
 	if err != nil {
-		logger.Log.Errorf("non-query failed: %s : %v", query, err)
-		return nil, err
+		logger.Error("non-query failed: %s : %v", query, err)
 	}
-	return commandTag, nil
+	return commandTag, err
 }
 
 // checks if supabase connection is alive
 func SupabaseCheck() error {
 	_, err := SupabaseClient.Auth.GetUser()
 	if err != nil {
-		logger.Log.Errorf("Supabase health check failed : %v", err)
+		logger.Error("Supabase health check failed : %v", err)
 		return err
 	}
-	logger.Log.Info("Supabase connection is healthy")
+	logger.Info("Supabase connection is healthy")
 	return nil
 }
 
-//checks if db connection is alive
+// checks if db connection is alive
 func DBCheck() error {
 	if err := DB.Ping(context.Background()); err != nil {
-		logger.Log.Errorf("Database health check failed : %v", err)
+		logger.Error("Database health check failed : %v", err)
 		return err
 	}
+	logger.Info("DB connection is healthy")
 	return nil
 }
