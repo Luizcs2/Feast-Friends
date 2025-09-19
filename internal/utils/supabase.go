@@ -6,7 +6,6 @@ import (
 	"feast-friends-api/internal/config"
 	"feast-friends-api/pkg/logger"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/jackc/pgconn"
