@@ -97,46 +97,6 @@ feast-friends-api/
 └── ...
 ```
 
-## 🧪 Testing Your Code
-
-### Manual Testing with REST Client (VS Code)
-Create a file `api-tests.http`:
-```http
-### Health Check
-GET http://localhost:8080/health
-
-### Register User
-POST http://localhost:8080/api/auth/register
-Content-Type: application/json
-
-{
-  "email": "test@example.com",
-  "username": "testuser",
-  "password": "password123",
-  "full_name": "Test User"
-}
-
-### Login
-POST http://localhost:8080/api/auth/login
-Content-Type: application/json
-
-{
-  "email": "test@example.com",
-  "password": "password123"
-}
-```
-
-### Running Automated Tests
-```bash
-# Run all tests
-make test
-
-# Run tests with coverage
-make test-coverage
-
-# Check code formatting
-make fmt
-```
 
 ### Communication Channels
 - **Daily Standup**: Share what you worked on, what you're working on, any blockers
