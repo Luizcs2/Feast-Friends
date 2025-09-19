@@ -73,8 +73,7 @@ func Connection() error {
 		return nil
 	}
 	// if we reach here all retries failed
-	return fmt.Errorf("failed to connect after %d attempts: %v", maxRetries, lastErr)
-
+	return fmt.Errorf("failed to connect after %d attempts, last error: %v", maxRetries, lastErr[len(lastErr)-1])
 }
 
 // ExecuteQuery executes a query and returns the resulting rows
@@ -117,4 +116,12 @@ func DBCheck() error {
 	}
 	logger.Info("DB connection is healthy")
 	return nil
+}
+
+//function to close connections 
+func CloseConnections() {
+	if DB != nil {
+		DB.Close()
+		logger.Info("DB connection closed")
+	}
 }
