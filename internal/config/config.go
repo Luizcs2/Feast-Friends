@@ -11,7 +11,7 @@ import (
 
 //container which holds all configs app needs
 type Config struct {
-	Environment string `envconfig:"ENVIORNMENT" default:"dev"`
+	Environment string `envconfig:"ENVIRONMENT" default:"dev"`
 	Server struct {
 		Port string `envconfig:"SERVER_PORT" default:"8000"`
 		GinMode string `envconfig:"GIN_MODE" default:"debug"`
@@ -38,9 +38,9 @@ type Config struct {
 //global var to hold the loaded config 
 var cfg Config
 
-//returning the loaded app cconfig 
-func Get() Config{
-	return cfg
+//returning the loaded app config
+func Get() *Config {
+	return &cfg
 }
 
 //holds config
@@ -54,5 +54,9 @@ func init(){
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Printf("Failed to Load Config:%v", err)
 	}
+
+	if cfg.JWT.Expiration == "" {
+		cfg.JWT.Expiration = "24H"
+	} 
 
 }
