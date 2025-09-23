@@ -1,6 +1,4 @@
-// TODO - Luiz
-// Export logger functions: Info, Error, Debug, Warn
-
+// logger.go 
 // Package logger provides a centralized logging setup for the Feast Friends API,
 // configuring log formatting and levels based on environment and application settings.
 package logger
@@ -16,6 +14,8 @@ import (
 var Log = logrus.New()
 
 
+// setting up wrapper functions for different log levels 
+// uses interface{} to accept any type of arguments
 func Info(format string, args ...interface{}){
 	Log.Infof(format,args...)
 }
