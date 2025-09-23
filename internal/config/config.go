@@ -1,4 +1,7 @@
-//Loads all env vars from .env into config struct which rest of app can use 
+// Loads all env vars from .env into config struct which rest of app can use 
+// it uses godotenv to load .env file and envconfig to parse env vars into struct
+// it also sets default values for some vars if not set in env
+// config struct is stored in a global var and can be accessed using Get() func
 
 package config
 

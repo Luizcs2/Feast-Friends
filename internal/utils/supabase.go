@@ -1,3 +1,11 @@
+// supabase.go contains all the functions to connect to supabase and postgres database
+// it includes connection pooling, health checks and query execution functions
+// it uses pgx and supabase-go packages to connect to the database and supabase client
+// it also includes retry logic to handle transient errors and exponential backoff strategy
+// to avoid overwhelming the server with requests
+// connection parameters are loaded from config package
+
+
 package utils
 
 //set importing necessary packages
@@ -14,9 +22,11 @@ import (
 	"github.com/supabase-community/supabase-go"
 )
 
-var DB *pgxpool.Pool
+var DB *pgxpool.Pool // global db connection pool
 var SupabaseClient *supabase.Client
 
+// this func connects to supabase and postgres database with retry logic
+// it returns error if connection fails after max retries
 func Connection() error {
 	//loading in config
 	cfg := config.Get()
@@ -27,6 +37,7 @@ func Connection() error {
 	var lastErr []error
 	var check error
 
+	//retrying connection maxRetries times with retryDelay interval
 	for i := 0; i < maxRetries; i++ {
 
 		clientOptions := supabase.ClientOptions{}
@@ -39,7 +50,8 @@ func Connection() error {
 			time.Sleep(retryDelay)
 			continue //trying until max retries reached
 		}
-		SupabaseClient = SupaClient
+
+		SupabaseClient = SupaClient // the supabase client is set to the global var
 
 		//using health check to confirm connection is alive
 		if err := SupabaseCheck(); err != nil {
@@ -50,7 +62,6 @@ func Connection() error {
 		}
 
 		// asking for connection pool && return error if any
-
 		dbpool, err := pgxpool.Connect(context.Background(), fmt.Sprintf("%s?connect_timeout=10", connStr))
 		if err != nil {
 			lastErr = append(lastErr, fmt.Errorf("failed to connect to DB: %v", err))
@@ -77,6 +88,8 @@ func Connection() error {
 }
 
 // ExecuteQuery executes a query and returns the resulting rows
+// it uses interface{} to accept any type of arguments
+// it returns pgx.Rows and error if any
 func ExecuteQuery(query string, args ...interface{}) (pgx.Rows, error) {
 	rows, err := DB.Query(context.Background(), query, args...)
 	if err != nil {
@@ -97,7 +110,7 @@ func ExecuteNonQuery(query string, args ...interface{}) (pgconn.CommandTag, erro
 	return commandTag, err
 }
 
-// checks if supabase connection is alive
+// checks if supabase connection is alive 
 func SupabaseCheck() error {
 	_, err := SupabaseClient.Auth.GetUser()
 	if err != nil {
