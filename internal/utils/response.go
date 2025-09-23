@@ -1,17 +1,13 @@
-
-// TODO - Luiz
-// 1. Standard JSON response helper functions:
-//    - SuccessResponse(data, message)
-//    - ErrorResponse(error, statusCode)
-//    - PaginatedResponse(data, totalCount, page, limit)
-// 2. Consistent error message formatting
-// 3. HTTP status code constants
-// 4. Response pagination metadata
+// response.go this file contains helper functions to format JSON responses for the API
+// it includes functions to format success, error and paginated responses
+// it uses standard http package for status codes and custom logger package for logging
 
 package utils
 
 import (
 	"feast-friends-api/pkg/logger"
+	"math"
+	"net/http"
 )
 
 // this helper function formats a successful JSON response
@@ -29,28 +25,36 @@ func SuccessResponse(data interface{}, message string) map[string]interface{} {
 
 //this func formats an error JSON response
 // it logs the error and returns a map with status, message and code
-func ErrorResponse(err error, statusCode int) map[string]interface{} {
+func ErrorResponse(message string, err error, statusCode int) map[string]interface{} {
 	logger.Error("error response : %v" , err.Error())
 
 	return map[string]interface{}{
 		"status" : "error",
-		"message" : err.Error(),
-		"code" : statusCode,
+		"message" : message,
+		"code" : http.StatusText(statusCode),
 	}
 }
 
 //this func formats a successful JSON response without message
 // it is used for paginated responses
-func PaginatedResponse(data interface{}, totalCount, page, limit int) map[string]interface{}{
+// includes meta info like total count, page, limit and total pages
+func PaginatedResponse(message string, data interface{}, totalCount, page, limit int) map[string]interface{}{
 	logger.Info("paginated response : page %d limit %d total_count %d", page, limit, totalCount)
+
+	totalpages := 0 
+	if limit > 0 {
+		totalpages = int(math.Ceil(float64(totalCount) / float64(limit)))
+	}
+
 	return map[string]interface{}{
 		"status" : "success",
-		"message" : "Fetched successfully",
+		"message" : message,
 		"data" : data,
 		"meta" : map[string]interface{}{
 			"total_count" : totalCount,
 			"page" : page,
 			"limit" : limit,
+			"total_pages" : totalpages,
 		},
 	}
 }
