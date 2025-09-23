@@ -29,7 +29,7 @@ func UsernameIsValid(username string) bool {
 		return false 
 	}
 	//check if username is alphanumeric
-	re:= regexp.MustCompile(`^[a-zA-Z0-9_.]+$`) 
+	re:= regexp.MustCompile(`^[a-zA-Z0-9_.!]+$`) 
 
 	return re.MatchString(username)
 }
