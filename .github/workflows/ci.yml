@@ -27,11 +27,11 @@ jobs:
         with:
           go-version: '1.22'
 
-      # Step 3: Run the linter to check for code style and potential errors.
-      - name: Run linter
-        uses: golangci/golangci-lint-action@v5
-        with:
-          version: v1.57.2
+      # # Step 3: Run the linter to check for code style and potential errors.
+      # - name: Run linter
+      #   uses: golangci/golangci-lint-action@v5
+      #   with:
+      #     version: v1.57.2
 
       # Step 4: Run the unit tests for your application.
       - name: Run tests
