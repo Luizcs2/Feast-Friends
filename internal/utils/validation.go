@@ -47,7 +47,7 @@ func EmailIsValid(email string) bool {
 
 // this func checks for the pasword strength
 //password is only valid if it contains at least 8 characters, one uppercase letter, one special character and one digit
-func Passwordstrength(password string) bool {
+func PasswordStrength(password string) bool {
 	password = strings.TrimSpace(password) // sanitize input making sure no html tags are present
 	if len(password)<8 {
 		return false
