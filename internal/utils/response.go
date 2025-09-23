@@ -14,7 +14,8 @@ import (
 	"feast-friends-api/pkg/logger"
 )
 
-
+// this helper function formats a successful JSON response
+//	it logs the success message and returns a map with status, message and data
 func SuccessResponse(data interface{}, message string) map[string]interface{} {
 	logger.Info("success response : %v" , message)
 
@@ -26,6 +27,8 @@ func SuccessResponse(data interface{}, message string) map[string]interface{} {
 
 }
 
+//this func formats an error JSON response
+// it logs the error and returns a map with status, message and code
 func ErrorResponse(err error, statusCode int) map[string]interface{} {
 	logger.Error("error response : %v" , err.Error())
 
@@ -36,10 +39,13 @@ func ErrorResponse(err error, statusCode int) map[string]interface{} {
 	}
 }
 
+//this func formats a successful JSON response without message
+// it is used for paginated responses
 func PaginatedResponse(data interface{}, totalCount, page, limit int) map[string]interface{}{
 	logger.Info("paginated response : page %d limit %d total_count %d", page, limit, totalCount)
 	return map[string]interface{}{
 		"status" : "success",
+		"message" : "Fetched successfully",
 		"data" : data,
 		"meta" : map[string]interface{}{
 			"total_count" : totalCount,
