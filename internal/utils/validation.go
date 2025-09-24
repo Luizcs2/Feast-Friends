@@ -54,10 +54,11 @@ func PasswordStrength(password string) bool {
 	}
 
 	uppercase := regexp.MustCompile(`[A-Z]`)
+	lowercase := regexp.MustCompile(`[a-z]`)
 	specialChar := regexp.MustCompile(`[!@#$&*]`)
 	digit := regexp.MustCompile(`[0-9]`)
 
-	if  !uppercase.MatchString(password) || !specialChar.MatchString(password) || !digit.MatchString(password) { 
+	if  !uppercase.MatchString(password) || !specialChar.MatchString(password) || !digit.MatchString(password) ||!lowercase.MatchString(password) { 
 		return false /// we set the mimimum lenght of the password to 8
 	}
 
