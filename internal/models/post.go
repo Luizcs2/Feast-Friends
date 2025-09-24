@@ -1,7 +1,7 @@
 package models
 
 import (
-	"time"
+	"feast-friends-api/pkg/helpers"
 )
 
 // Post represents a social media post containing recipe information
@@ -38,15 +38,11 @@ type PostWithUser struct {
 
 // Validate performs validation on the Post struct using the validator package
 func (p *Post) Validate() error {
-	return validate.Struct(p)
+	return helpers.ValidateStruct(p)
 }
 
 // TimeFormat converts the CreatedAt timestamp to a human-readable format
 // Returns date in format "02 Jan 2006 15:04"
 func (p *Post) TimeFormat() string {
-	t, err := time.Parse(time.RFC3339, p.CreatedAt)
-	if err != nil {
-		return ""
-	}
-	return t.Format("02 Jan 2006 15:04")
+	return helpers.FormatTime(p.CreatedAt)
 }

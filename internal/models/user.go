@@ -10,12 +10,10 @@ package models
 import (
 	"fmt"
 	"strings"
-	"time"
-
-	"github.com/go-playground/validator/v10"
+	"feast-friends-api/pkg/helpers"
 )
 
-var validate *validator.Validate
+
 
 // the struct that represents a user in the database
 type User struct {
@@ -31,10 +29,6 @@ type User struct {
 	CreatedAt      string `json:"created_at" validate:"required"`
 }
 
-// use this func to validate user struct fields
-func (u *User) Validate() error {
-	return validate.Struct(u)
-}
 
 // function that displays the users full name if available otherwise username
 func (u *User) DisplayName() string {
@@ -46,12 +40,14 @@ func (u *User) DisplayName() string {
 
 // function that formats the CreatedAt field to a more readable format
 func (u *User) TimeFormat() string {
-	t, err := time.Parse(time.RFC3339, u.CreatedAt)
-	if err != nil {
-		return u.CreatedAt // return original string if parsing fails
-	}
-	return t.Format("02 Jan 2006 15:04")
+	return helpers.FormatTime(u.CreatedAt)
 }
+
+// use this func to validate user struct fields
+func (u *User) Validate() error {
+	return helpers.ValidateStruct(u)
+}
+
 
 // function that returns a string representation of the user profile for development and debugging
 func (u User) UserProfile() string {

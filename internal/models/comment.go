@@ -1,6 +1,7 @@
 package models
-
-import ()
+import(
+	"feast-friends-api/pkg/helpers"
+)
 
 // Comment represents a comment made by a user on a post
 type Comment struct {
@@ -20,6 +21,12 @@ type CommentWithUser struct {
 
 // Validate checks if the Comment struct fields meet the validation rules
 // defined in the struct tags using the validator package
-func (v *Comment) Validate() error {
-	return validate.Struct(v)
+func (x *Comment) Validate() error {
+	return helpers.ValidateStruct(x)
+}
+
+//timeFormat wil convert the created at timestamp to a human readable formtat 
+//it will return a date in the format "02 Jan 2002 15:04"
+func (x *Comment) TimeFormat() string {
+	return helpers.FormatTime(x.CreatedAt)
 }
