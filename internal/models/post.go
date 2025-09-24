@@ -2,27 +2,28 @@ package models
 
 import (
 	"feast-friends-api/pkg/helpers"
+	"time"
 )
 
 // Post represents a social media post containing recipe information
 type Post struct {
-	ID            int    `json:"id" validate:"required"`              // Unique identifier for the post
-	UserID        int    `json:"user_id" validate:"required"`        // ID of the user who created the post
-	Title         string `json:"title" validate:"omitempty,max=100"` // Optional title of the post, max 100 chars
-	Description   string `json:"description" validate:"omitempty,max=400"` // Optional description, max 400 chars
-	ImageURL      string `json:"image_url" validate:"omitempty,url"`      // Optional URL to post's image
-	Recipe        Recipe `json:"recipe" validate:"required,dive"`          // Recipe details, required
-	LikesCount    int    `json:"likes_count" validate:"required,min=0"`   // Number of likes, must be non-negative
-	CommentsCount int    `json:"comments_count" validate:"required,min=0"` // Number of comments, must be non-negative
-	CreatedAt     string `json:"created_at" validate:"required"`          // Timestamp of post creation in RFC3339 format
+	ID            int    	`json:"id" validate:"required"`              // Unique identifier for the post
+	UserID        int    	`json:"user_id" validate:"required"`        // ID of the user who created the post
+	Title         string 	`json:"title" validate:"omitempty,max=100"` // Optional title of the post, max 100 chars
+	Description   string 	`json:"description" validate:"omitempty,max=400"` // Optional description, max 400 chars
+	ImageURL      string 	`json:"image_url" validate:"omitempty,url"`      // Optional URL to post's image
+	Recipe        Recipe 	`json:"recipe" validate:"required,dive"`          // Recipe details, required
+	LikesCount    int    	`json:"likes_count" validate:"required,min=0"`   // Number of likes, must be non-negative
+	CommentsCount int    	`json:"comments_count" validate:"required,min=0"` // Number of comments, must be non-negative
+	CreatedAt     time.Time `json:"created_at" validate:"required"`          // Timestamp of post creation in RFC3339 format
 }
 
 // Ingredients represents a single ingredient in a recipe
 type Ingredients struct {
-	Name     string `json:"name" validate:"required"`     // Name of the ingredient
-	Quantity string `json:"quantity" validate:"required"` // Amount needed (e.g., "2 cups")
-	Grams    int    `json:"grams" validate:"omitempty,min=0"` // Optional weight in grams
-}
+	Name    	 string		`json:"name" validate:"required"`     // Name of the ingredient
+	Quantity	 string		`json:"quantity" validate:"required"` // Amount needed (e.g., "2 cups")
+	Grams    	int    		`json:"grams" validate:"omitempty,min=0"` // Optional weight in grams
+}	
 
 // Recipe contains the full recipe information
 type Recipe struct {

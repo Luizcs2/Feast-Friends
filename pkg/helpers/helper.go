@@ -24,10 +24,6 @@ func ValidateStruct(s interface{}) error {
 // Input: CreatedAt - string in RFC3339 format (e.g. "2006-01-02T15:04:05Z07:00")
 // Output: formatted string in "DD MMM YYYY HH:mm" format (e.g. "02 Jan 2006 15:04")
 // Returns empty string if parsing fails
-func FormatTime(CreatedAt string) string {
-	t, err := time.Parse(time.RFC3339, CreatedAt)
-	if err != nil {
-		return ""
-	}
+func FormatTime(t time.Time) string {
 	return t.Format("02 Jan 2006 15:04")
 }

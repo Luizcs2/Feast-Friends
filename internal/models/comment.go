@@ -1,15 +1,16 @@
 package models
 import(
 	"feast-friends-api/pkg/helpers"
+	"time"
 )
 
 // Comment represents a comment made by a user on a post
 type Comment struct {
-	ID        int    `json:"id" validate:"required"`      // Unique identifier for the comment
-	UserID    int    `json:"user_id" validate:"required"` // ID of the user who made the comment
-	PostID    int    `json:"post_id" validate:"required"` // ID of the post being commented on
-	Content   string `json:"content" validate:"required min=0,max=250"` // The comment text, limited to 250 characters
-	CreatedAt string `json:"created_at" validate:"required"`           // Timestamp when the comment was created
+	ID        int    	`json:"id" validate:"required"`      // Unique identifier for the comment
+	UserID    int    	`json:"user_id" validate:"required"` // ID of the user who made the comment
+	PostID    int    	`json:"post_id" validate:"required"` // ID of the post being commented on
+	Content   string 	`json:"content" validate:"required min=0,max=250"` // The comment text, limited to 250 characters
+	CreatedAt time.Time `json:"created_at" validate:"required"`           // Timestamp when the comment was created
 }
 
 // CommentWithUser is a composite structure that embeds a Comment

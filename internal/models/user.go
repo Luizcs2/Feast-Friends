@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"strings"
 	"feast-friends-api/pkg/helpers"
+	"time"
 )
 
 
@@ -26,7 +27,7 @@ type User struct {
 	FollowersCount int    `json:"followers_count" validate:"required,min=0"`
 	FollowingCount int    `json:"following_count" validate:"required,min=0"`
 	PostsCount     int    `json:"posts_count" validate:"required,min=0"`
-	CreatedAt      string `json:"created_at" validate:"required"`
+	CreatedAt      time.Time `json:"created_at" validate:"required"`
 }
 
 
