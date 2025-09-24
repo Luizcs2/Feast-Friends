@@ -29,7 +29,7 @@ func UsernameIsValid(username string) bool {
 		return false 
 	}
 	//check if username is alphanumeric
-	re:= regexp.MustCompile(`^[a-zA-Z0-9_.]+$`) 
+	re:= regexp.MustCompile(`^[a-zA-Z0-9_.!]+$`) 
 
 	return re.MatchString(username)
 }
@@ -54,10 +54,11 @@ func PasswordStrength(password string) bool {
 	}
 
 	uppercase := regexp.MustCompile(`[A-Z]`)
+	lowercase := regexp.MustCompile(`[a-z]`)
 	specialChar := regexp.MustCompile(`[!@#$&*]`)
 	digit := regexp.MustCompile(`[0-9]`)
 
-	if  !uppercase.MatchString(password) || !specialChar.MatchString(password) || !digit.MatchString(password) { 
+	if  !uppercase.MatchString(password) || !specialChar.MatchString(password) || !digit.MatchString(password) ||!lowercase.MatchString(password) { 
 		return false /// we set the mimimum lenght of the password to 8
 	}
 
