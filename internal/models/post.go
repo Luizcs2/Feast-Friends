@@ -12,7 +12,7 @@ type Post struct {
 	Title         string 	`json:"title" validate:"omitempty,max=100"` // Optional title of the post, max 100 chars
 	Description   string 	`json:"description" validate:"omitempty,max=400"` // Optional description, max 400 chars
 	ImageURL      string 	`json:"image_url" validate:"omitempty,url"`      // Optional URL to post's image
-	Recipe        Recipe 	`json:"recipe" validate:"required,dive"`          // Recipe details, required
+	Recipe        Recipe 	`json:"recipe" validate:"required"`          // Recipe details, required
 	LikesCount    int    	`json:"likes_count" validate:"required,min=0"`   // Number of likes, must be non-negative
 	CommentsCount int    	`json:"comments_count" validate:"required,min=0"` // Number of comments, must be non-negative
 	CreatedAt     time.Time `json:"created_at" validate:"required"`          // Timestamp of post creation in RFC3339 format

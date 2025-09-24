@@ -13,7 +13,7 @@ type Event struct {
 	Title            string    `json:"title" validate:"required,min=3,max=20"`        
 	Description      string    `json:"description" validate:"required,max=500"`       
 	Location         string    `json:"location" validate:"required"`                  
-	EventDate        time.Time `json:"event_date" validate:"required,future"`         
+	EventDate        time.Time `json:"event_date" validate:"required"`         
 	MaxAttendees     int       `json:"max_attendees" validate:"required,min=1"`       // Maximum number of attendees allowed
 	CurrentAttendees int       `json:"current_attendees"`                             // Current number of attendees
 	ImageURL         string    `json:"image_url"`                                     // Optional image URL for the event
