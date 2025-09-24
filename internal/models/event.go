@@ -39,3 +39,7 @@ func (x *Event) Validate() error {
 func (x *Event) TimeFormat() string {
 	return helpers.FormatTime(x.CreatedAt)
 }	
+
+func (x *EventRSVP) RSVPTimeFormat() string {
+	return helpers.FormatTime(x.CreatedAt)
+}	
