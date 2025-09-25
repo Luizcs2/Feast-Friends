@@ -18,6 +18,7 @@ type Config struct {
 	Server struct {
 		Port string `envconfig:"SERVER_PORT" default:"8000"`
 		GinMode string `envconfig:"GIN_MODE" default:"debug"`
+		Frontend string `envconfig:"FRONTEND_RUL" default:"https://localhost:3000"` 
 
 	}
 	Supabase struct{
